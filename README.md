@@ -4,6 +4,7 @@
 
 ```.env
 AUTHORIZATION_KEY=""
+LINE_CHANNEL_SECRET=""
 ```
 
 ## Usage
