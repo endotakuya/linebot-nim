@@ -1,4 +1,4 @@
-import asynchttpserver, asyncdispatch, json, httpclient
+import asynchttpserver, asyncdispatch, json, httpclient, hmac, base64
 import dotenv, os
 
 let env = initDotEnv()
@@ -10,6 +10,13 @@ const
 proc callback(req: Request) {.async.} =
   if req.url.path == "/webhook":
     echo "Request body: ", req.body
+
+    # Verification of signature
+    let signature = req.headers.getOrDefault(key = "x-line-signature")
+    let hash = hmac_sha256(key = getEnv("LINE_CHANNEL_SECRET"), data = req.body)
+    if signature != encode(s = hash):
+      await req.respond(Http404, "Not Found")
+
     let events = parseJson(req.body)["events"]
     for event in events:
       if event["type"].str == "message":
