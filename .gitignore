@@ -1,0 +1,5 @@
+### https://raw.github.com/github/gitignore//Nim.gitignore
+
+nimcache/
+.env
+app
